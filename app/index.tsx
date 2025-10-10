@@ -1,31 +1,38 @@
 import { fetchCharacters } from "@/services/list";
 import React, { useEffect, useState } from "react";
-import { FlatList } from "react-native-reanimated/lib/typescript/Animated";
+import { FlatList, Text, View } from "react-native-reanimated/lib/typescript/Animated";
 
-export default function Home(){
-    const [personagens,setPersonagens] = useState([]);
+interface Personagem {
+    id: number;
+    name: String;
+}
+
+export default function Home() {
+    const [personagens, setPersonagens] = useState<Personagem[]>([]);
 
     useEffect(() => {
-        async function carregarPersonagens(){
+        async function carregarPersonagens() {
             const dados = await fetchCharacters();
             setPersonagens(dados.characters);
         }
-    },[]);
-    return(
-        <view>
-            <text> Lista de Personagens</text>
+
+        carregarPersonagens();
+    }, []);
+    
+    return (
+        <View>
+            <Text> Lista de Personagens</Text>
             <FlatList
                 data={personagens}
                 keyExtractor={item => item.id.toString()}
-                renderItem={({item})} => (
+                renderItem={({ item }) => (
                     <View>
-                        <Image source={{uri:item[0]}}/>
-                        
+                        <Text>{item.id}-{item.name}</Text>
 
                     </View>
-                )
+                )}
             />
-        </view>
+        </View>
     )
-    
+
 }
